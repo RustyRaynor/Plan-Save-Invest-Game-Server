@@ -7,8 +7,10 @@ const hostGame = (rooms, playerName, playerAvatarData, hostSocket) => {
   rooms.push({
     id: uuid,
 
-    isGameOver: false,
     isInGame: false,
+
+    playersLoaded: 1,
+    playersDoneWithAction: 1,
 
     players: [
       {
@@ -19,6 +21,18 @@ const hostGame = (rooms, playerName, playerAvatarData, hostSocket) => {
     ],
 
     sockets: [hostSocket],
+
+      allCards: [
+      0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,
+      22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40,
+      41, 42, 43, 44, 45, 46, 47
+    ],
+
+    questionCards: [
+      0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,
+      22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40,
+      41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68
+    ],
   });
 
   hostSocket.roomId = uuid;
@@ -166,9 +180,29 @@ const leaveRoom = (rooms, socket, roomID) => {
   });
 };
 
+const startGame = (rooms, roomID) => {
+  rooms.map((room) => {
+    if (room.id == roomID) {
+
+      console.log("Host Started Game");
+      
+      room.isInGame = true;
+
+      const packet = {
+        response: sendingPackets.Response.HOST_STARTED_GAME_SUCCCESSFULLY,
+      };
+
+      room.sockets.map((playerSocket) => {
+        playerSocket.send(JSON.stringify(packet));
+      });
+    }
+  });
+};
+
 module.exports = {
   hostGame,
   getAllRooms,
   joinRoom,
   leaveRoom,
+  startGame,
 };

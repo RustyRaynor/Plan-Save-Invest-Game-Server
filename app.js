@@ -1,6 +1,7 @@
 const Websocket = require("ws");
 const recievedPackets = require("./packets/recievingPackets");
 const lobby = require("./servers/lobby");
+const game = require("./servers/game");
 
 let rooms = [];
 
@@ -35,6 +36,36 @@ wss.on("connection", function (socket) {
 
       case recievedPackets.Request.CLIENT_LEAVE_GAME_ROOM:
         lobby.leaveRoom(rooms, socket, data.roomID);
+        break;
+
+      case recievedPackets.Request.HOST_START_GAME:
+        lobby.startGame(rooms, data.roomID);
+        break;
+
+      case recievedPackets.Request.PLAYER_LOADED_INTO_GAME:
+        game.playerLoaded(rooms, data.roomID);
+        break;
+
+      case recievedPackets.Request.PLAYER_DONE_SHOWING_ACTIONS:
+        game.playerDoneWithActions(rooms, data.roomID);
+        break;
+
+      case recievedPackets.Request.PLAYER_DRAWS_CARD:
+        game.playerDrawsCard(rooms, data.roomID, socket);
+        break;
+
+      case recievedPackets
+        .Request.PLAYER_EXCHANGES_CARD_WITH_DECK_AFTER_DRAWING:
+        game.playerDrawAndExchangeCard(
+          rooms,
+          data.roomID,
+          socket,
+          data.cardPos
+        );
+        break;
+
+      case recievedPackets.Request.PLAYER_RETURNS_CARD:
+        game.playerReturnsCard(rooms, data.roomID, socket);
         break;
     }
   });
