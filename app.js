@@ -67,6 +67,79 @@ wss.on("connection", function (socket) {
       case recievedPackets.Request.PLAYER_RETURNS_CARD:
         game.playerReturnsCard(rooms, data.roomID, socket);
         break;
+
+      case recievedPackets.Request.PLAYER_IS_TRADING:
+        game.playerStartsTrade(rooms, data.roomID, socket);
+        break;
+
+      case recievedPackets.Request.PLAYER_REQUESTS_CARD:
+        game.playerRequestsCard(
+          rooms,
+          data.roomID,
+          socket,
+          data.cardType,
+          data.cardLetter
+        );
+        break;
+
+      case recievedPackets.Request.PLAYER_REPLY_TO_TRADE:
+        game.playerRepliedToTrade(
+          rooms,
+          data.roomID,
+          data.isPlayerTrading,
+          data.cardPos,
+          data.playerIndex,
+          data.currentTradingPlayerIndex
+        );
+        break;
+
+      case recievedPackets.Request.PLAYER_COULD_NOT_TRADE:
+        game.playerCouldNotTrade(rooms, data.roomID, socket);
+        break;
+
+      case recievedPackets.Request.PLAYER_CHOSE_PLAYER_TO_TRADE_WITH:
+        game.playerChosenToTradeWith(
+          rooms,
+          data.roomID,
+          socket,
+          data.playerChosen
+        );
+        break;
+
+      case recievedPackets.Request.PLAYER_ANSWERED_QUESTION:
+        game.playerAnsweredQuestion(
+          rooms,
+          data.roomID,
+          socket,
+          data.answer,
+          data.tradingPlayer,
+          data.pointsGiven
+        );
+        break;
+
+      case recievedPackets.Request.PLAYER_CHOSE_CARD_TO_KEEP_BACK:
+        game.playerChoseCardToKeepBack(
+          rooms,
+          data.roomID,
+          socket,
+          data.recievingPlayerCardPos,
+          data.tradingPlayerCardPos
+        );
+        break;
+
+      case recievedPackets.Request.PLAYER_MAKING_WORD:
+        game.playerMakingWord(rooms, data.roomID, socket);
+        break;
+
+      case recievedPackets.Request.PLAYER_MADE_WORD:
+        game.playerMadeWord(
+          rooms,
+          data.roomID,
+          socket,
+          data.cardPositions,
+          data.points
+        );
+        break;
     }
   });
 });
